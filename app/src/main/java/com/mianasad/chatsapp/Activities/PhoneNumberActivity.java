@@ -1,11 +1,10 @@
-package com.mianasad.chatsapp;
+package com.mianasad.chatsapp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,15 +31,15 @@ FirebaseAuth auth;
         //End Sarthak
 
 
-//        auth = FirebaseAuth.getInstance();
-//        if(auth.getCurrentUser() != null) {
-//            Intent intent = new Intent(PhoneNumberActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        auth = FirebaseAuth.getInstance();
+        if(auth.getCurrentUser() != null) {
+            Intent intent = new Intent(PhoneNumberActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         getSupportActionBar().hide();
-        binding.phoneBox.requestFocus();
+//        binding.phoneBox.requestFocus();
         binding.continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

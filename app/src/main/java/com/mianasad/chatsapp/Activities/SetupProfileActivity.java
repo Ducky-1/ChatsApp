@@ -1,4 +1,4 @@
-package com.mianasad.chatsapp;
+package com.mianasad.chatsapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mianasad.chatsapp.R;
+import com.mianasad.chatsapp.Models.User;
 import com.mianasad.chatsapp.databinding.ActivitySetupProfileBinding;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -49,9 +51,9 @@ public class SetupProfileActivity extends AppCompatActivity {
         binding.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //sar
+                //Start Sarthak
                 CropImage.activity().start(SetupProfileActivity.this);
-                //end sar
+                //End Sarthak
             }
         });
 
@@ -130,7 +132,7 @@ public class SetupProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //sar
+        //Start sarthak
         if(requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK){
@@ -142,44 +144,6 @@ public class SetupProfileActivity extends AppCompatActivity {
                 System.out.println(e);
             }
         }
-        //endsar
+        //end sarthak
     }
 }
-
-//        if(data != null) {
-//            if(data.getData() != null) {
-//                Uri uri = data.getData(); // filepath
-//                FirebaseStorage storage = FirebaseStorage.getInstance();
-//                long time = new Date().getTime();
-//                StorageReference reference = storage.getReference().child("Profiles").child(time+"");
-//                reference.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-//                        if(task.isSuccessful()) {
-//                            reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//                                    String filePath = uri.toString();
-//                                    HashMap<String, Object> obj = new HashMap<>();
-//                                    obj.put("image", filePath);
-//                                    database.getReference().child("users")
-//                                            .child(FirebaseAuth.getInstance().getUid())
-//                                            .updateChildren(obj).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//
-//                                        }
-//                                    });
-//                                }
-//                            });
-//                        }
-//                    }
-//                });
-//
-//
-//                binding.imageView.setImageURI(data.getData());
-//                selectedImage = data.getData();
-//            }
-//        }
-//    }
-//}

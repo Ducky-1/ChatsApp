@@ -14,25 +14,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatsApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChatActivity"></activity>
-        <activity android:name=".SetupProfileActivity" />
+        <activity android:name=".Activities.ChatActivity"></activity>
+        <activity android:name=".Activities.SetupProfileActivity" />
         <activity
-            android:name=".OTPActivity"
+            android:name=".Activities.OTPActivity"
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".PhoneNumberActivity"
-            android:windowSoftInputMode="stateVisible">
+            android:name=".Activities.PhoneNumberActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-
+        <activity
+            android:name=".Activities.MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

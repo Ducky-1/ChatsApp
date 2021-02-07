@@ -4,24 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f9f9f9"
-    tools:context=".PhoneNumberActivity">
+    android:background="#FFFFFF"
+    tools:context=".Activities.PhoneNumberActivity">
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_width="244dp"
+        android:layout_height="190dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mobile_auth" />
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/firstpage" />
 
     <TextView
         android:id="@+id/phoneLbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="Please Enter Your Phone Number"
         android:textColor="@color/black"
@@ -42,26 +43,30 @@
         app:layout_constraintEnd_toEndOf="@+id/phoneLbl"
         app:layout_constraintStart_toStartOf="@+id/phoneLbl"
         app:layout_constraintTop_toBottomOf="@+id/phoneLbl" />
-<!--    start Sarthak-->
+    <!--    start Sarthak-->
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/spinnerCountries"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="16dp"
+        app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintStart_toStartOf="parent"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp"
-        android:id="@+id/spinnerCountries">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:weightSum="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/picker"
@@ -69,15 +74,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                app:ccp_textSize="16sp"
                 app:ccp_autoDetectCountry="true"
-                app:ccp_showNameCode="true"/>
+                app:ccp_showNameCode="true"
+                app:ccp_textSize="16sp" />
 
         </LinearLayout>
 
-
     </androidx.cardview.widget.CardView>
-
 
     <!--    End Sarthak-->
 
@@ -88,6 +91,8 @@
         android:layout_marginTop="25dp"
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCountries">
@@ -103,11 +108,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:autofillHints="Phone"
                 android:background="@drawable/textbox_outline"
                 android:ems="10"
-                android:hint="Phone Number"
+                android:hint="@string/phone_number"
+                android:inputType="phone"
                 android:padding="10dp"
-                android:phoneNumber="true"
                 android:textColorHint="#5E5454" />
 
             <Button
@@ -117,7 +123,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="5dp"
                 android:backgroundTint="#47CD4D"
-                android:text="Verify"
+                android:text="@string/verify"
                 app:cornerRadius="50dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

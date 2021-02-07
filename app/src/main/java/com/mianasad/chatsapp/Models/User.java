@@ -1,4 +1,4 @@
-package com.mianasad.chatsapp;
+package com.mianasad.chatsapp.Models;
 
 public class User {
     private String uid, name, phoneNumber, profileImage;

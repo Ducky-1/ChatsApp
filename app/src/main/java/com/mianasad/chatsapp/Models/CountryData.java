@@ -1,4 +1,4 @@
-package com.mianasad.chatsapp;
+package com.mianasad.chatsapp.Models;
 //Full Sarthak
 public class CountryData {
     public static final String[] countryNames = {"Afghanistan", "Albania",
