@@ -3,13 +3,11 @@ package com.mianasad.chatsapp.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -51,9 +49,13 @@ public class SetupProfileActivity extends AppCompatActivity {
         binding.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 //Start Sarthak
                 CropImage.activity().start(SetupProfileActivity.this);
                 //End Sarthak
+
+
             }
         });
 
@@ -61,12 +63,10 @@ public class SetupProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String name = binding.nameBox.getText().toString();
-
                 if(name.isEmpty()) {
                     binding.nameBox.setError("Please Enter Your Name",getDrawable(R.drawable.avatar));
                     return;
                 }
-
                 dialog.show();
                 if(selectedImage != null) {
                     StorageReference reference = storage.getReference().child("Profiles").child(auth.getUid());
@@ -78,7 +78,6 @@ public class SetupProfileActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         String imageUrl = uri.toString();
-
                                         String uid = auth.getUid();
                                         String phone = auth.getCurrentUser().getPhoneNumber();
                                         String name = binding.nameBox.getText().toString();
@@ -132,6 +131,8 @@ public class SetupProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
         //Start sarthak
         if(requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -145,5 +146,7 @@ public class SetupProfileActivity extends AppCompatActivity {
             }
         }
         //end sarthak
+
+
     }
 }

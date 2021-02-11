@@ -5,20 +5,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,14 +30,11 @@ import com.mianasad.chatsapp.R;
 import com.mianasad.chatsapp.Models.User;
 import com.mianasad.chatsapp.Adapters.UsersAdapter;
 import com.mianasad.chatsapp.databinding.ActivityMainBinding;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
+import me.ibrahimsn.lib.OnItemReselectedListener;
 import me.ibrahimsn.lib.OnItemSelectedListener;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     TopStatusAdapter statusAdapter;
     ArrayList<UserStatus> userStatuses;
     ProgressDialog dialog;
-
     User user;
 
     @Override
@@ -75,10 +67,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         user = snapshot.getValue(User.class);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
                     }
                 });
 
@@ -89,11 +79,10 @@ public class MainActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         binding.statusList.setLayoutManager(layoutManager);
         binding.statusList.setAdapter(statusAdapter);
-
         binding.recyclerView.setAdapter(usersAdapter);
-
         binding.recyclerView.showShimmerAdapter();
         binding.statusList.showShimmerAdapter();
+
 
         database.getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -107,12 +96,11 @@ public class MainActivity extends AppCompatActivity {
                 binding.recyclerView.hideShimmerAdapter();
                 usersAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+
 
         database.getReference().child("stories").addValueEventListener(new ValueEventListener() {
             @Override
@@ -131,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                             Status sampleStatus = statusSnapshot.getValue(Status.class);
                             statuses.add(sampleStatus);
                         }
-
                         status.setStatuses(statuses);
                         userStatuses.add(status);
                     }
@@ -139,12 +126,11 @@ public class MainActivity extends AppCompatActivity {
                     statusAdapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+
 
         binding.bottomNavigationView.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -164,24 +150,26 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-//        binding.bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.status:
-//                        Intent intent = new Intent();
-//                        intent.setType("image/*");
-//                        intent.setAction(Intent.ACTION_GET_CONTENT);
-//                        startActivityForResult(intent, 75);
-//                        break;
-//                }
-//                return true;
-//            }
-//        });
+        binding.bottomNavigationView.setOnItemReselectedListener(new OnItemReselectedListener() {
+            @Override
+            public void onItemReselect(int i) {
+                switch (i) {
+                    case 0:
+                        break;
+                    case 1:
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(intent, 75);
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+        });
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -193,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 Date date = new Date();
                 StorageReference reference = storage.getReference().child("status").child(date.getTime() + "");
-
                 reference.putFile(data.getData()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -233,7 +220,10 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
+
+
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -247,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

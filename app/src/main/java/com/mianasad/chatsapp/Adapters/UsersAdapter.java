@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +17,6 @@ import com.mianasad.chatsapp.Activities.ChatActivity;
 import com.mianasad.chatsapp.R;
 import com.mianasad.chatsapp.Models.User;
 import com.mianasad.chatsapp.databinding.RowConversationBinding;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,9 +39,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersVewHold
     @Override
     public void onBindViewHolder(@NonNull UsersVewHolder holder, int position) {
         User user = users.get(position);
-
         String senderId = FirebaseAuth.getInstance().getUid();
-
         String senderRoom = senderId + user.getUid();
         FirebaseDatabase.getInstance().getReference()
                 .child("chats")
@@ -62,10 +57,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersVewHold
                             holder.binding.lastMsg.setText("Tap To Chat");
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
                     }
                 });
 

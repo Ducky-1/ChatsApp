@@ -2,15 +2,12 @@ package com.mianasad.chatsapp.Adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfig;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
@@ -21,9 +18,7 @@ import com.mianasad.chatsapp.R;
 import com.mianasad.chatsapp.databinding.DeleteDialogBinding;
 import com.mianasad.chatsapp.databinding.ItemReceiveBinding;
 import com.mianasad.chatsapp.databinding.ItemSentBinding;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MessagesAdapter extends RecyclerView.Adapter {
 
@@ -89,10 +84,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                 viewHolder.binding.feeling.setVisibility(View.VISIBLE);
             } else {
                 ReceiverViewHolder viewHolder = (ReceiverViewHolder)holder;
-                viewHolder.binding.feeling.setImageResource(reactions[pos]);
                 viewHolder.binding.feeling.setVisibility(View.VISIBLE);
-
-
             }
 
             message.setFeeling(pos);
@@ -108,8 +100,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                     .child(receiverRoom)
                     .child("messages")
                     .child(message.getMessageId()).setValue(message);
-
-
 
             return true; // true is closing popup, false is requesting a new selection
         });
@@ -193,7 +183,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             viewHolder.binding.message.setText(message.getMessage());
 
             if(message.getFeeling() >= 0) {
-                //message.setFeeling(reactions[message.getFeeling()]);
                 viewHolder.binding.feeling.setImageResource(reactions[message.getFeeling()]);
                 viewHolder.binding.feeling.setVisibility(View.VISIBLE);
             } else {

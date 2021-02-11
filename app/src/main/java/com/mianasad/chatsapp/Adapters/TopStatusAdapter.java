@@ -4,22 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.mianasad.chatsapp.Activities.MainActivity;
 import com.mianasad.chatsapp.Models.Status;
-import com.mianasad.chatsapp.Models.User;
 import com.mianasad.chatsapp.Models.UserStatus;
 import com.mianasad.chatsapp.R;
-import com.mianasad.chatsapp.databinding.ItemSentBinding;
 import com.mianasad.chatsapp.databinding.ItemStatusBinding;
-
 import java.util.ArrayList;
-
 import omari.hamza.storyview.StoryView;
+import omari.hamza.storyview.callback.OnStoryChangedCallback;
 import omari.hamza.storyview.callback.StoryClickListeners;
 import omari.hamza.storyview.model.MyStory;
 
@@ -44,13 +39,9 @@ public class TopStatusAdapter extends RecyclerView.Adapter<TopStatusAdapter.TopS
     public void onBindViewHolder(@NonNull TopStatusViewHolder holder, int position) {
 
         UserStatus userStatus = userStatuses.get(position);
-
         Status lastStatus = userStatus.getStatuses().get(userStatus.getStatuses().size() - 1);
-
         Glide.with(context).load(lastStatus.getImageUrl()).into(holder.binding.image);
-
         holder.binding.circularStatusView.setPortionsCount(userStatus.getStatuses().size());
-
         holder.binding.circularStatusView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +49,6 @@ public class TopStatusAdapter extends RecyclerView.Adapter<TopStatusAdapter.TopS
                 for(Status status : userStatus.getStatuses()) {
                     myStories.add(new MyStory(status.getImageUrl()));
                 }
-
                 new StoryView.Builder(((MainActivity)context).getSupportFragmentManager())
                         .setStoriesList(myStories) // Required
                         .setStoryDuration(5000) // Default is 2000 Millis (2 Seconds)
@@ -75,7 +65,13 @@ public class TopStatusAdapter extends RecyclerView.Adapter<TopStatusAdapter.TopS
                             public void onTitleIconClickListener(int position) {
                                 //your action
                             }
-                        }) // Optional Listeners
+                        })
+                        .setOnStoryChangedCallback(new OnStoryChangedCallback() {
+                            @Override
+                            public void storyChanged(int p) {
+                                holder.binding.circularStatusView.setPortionColorForIndex(p,R.color.seashell);
+                            }
+                        })// Optional Listeners
                         .build() // Must be called before calling show method
                         .show();
             }
