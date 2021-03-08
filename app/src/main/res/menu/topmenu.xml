@@ -9,7 +9,9 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/group"
-        android:title="Groups" />
+        android:icon="@drawable/ic_public_chat"
+        android:title="Groups"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/invite"
         android:title="Invite" />

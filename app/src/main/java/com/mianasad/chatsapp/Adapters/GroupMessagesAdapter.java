@@ -13,15 +13,19 @@ import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfig;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mianasad.chatsapp.Models.Message;
+import com.mianasad.chatsapp.Models.User;
 import com.mianasad.chatsapp.R;
 import com.mianasad.chatsapp.databinding.DeleteDialogBinding;
-import com.mianasad.chatsapp.databinding.ItemReceiveBinding;
-import com.mianasad.chatsapp.databinding.ItemSentBinding;
+import com.mianasad.chatsapp.databinding.ItemReceiveGroupBinding;
+import com.mianasad.chatsapp.databinding.ItemSentGroupBinding;
 import java.util.ArrayList;
 
-public class MessagesAdapter extends RecyclerView.Adapter {
+public class GroupMessagesAdapter extends RecyclerView.Adapter {
 
     Context context;
     ArrayList<Message> messages;
@@ -29,24 +33,19 @@ public class MessagesAdapter extends RecyclerView.Adapter {
     final int ITEM_SENT = 1;
     final int ITEM_RECEIVE = 2;
 
-    String senderRoom;
-    String receiverRoom;
-
-    public MessagesAdapter(Context context, ArrayList<Message> messages, String senderRoom, String receiverRoom) {
+    public GroupMessagesAdapter(Context context, ArrayList<Message> messages) {
         this.context = context;
         this.messages = messages;
-        this.senderRoom = senderRoom;
-        this.receiverRoom = receiverRoom;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == ITEM_SENT) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_sent, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_sent_group, parent, false);
             return new SentViewHolder(view);
         } else {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_receive, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_receive_group, parent, false);
             return new ReceiverViewHolder(view);
         }
     }
@@ -85,36 +84,57 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                 viewHolder.binding.feeling.setVisibility(View.VISIBLE);
             } else {
                 ReceiverViewHolder viewHolder = (ReceiverViewHolder)holder;
+                viewHolder.binding.feeling.setImageResource(reactions[pos]);
                 viewHolder.binding.feeling.setVisibility(View.VISIBLE);
+
+
             }
 
             message.setFeeling(pos);
 
             FirebaseDatabase.getInstance().getReference()
-                    .child("chats")
-                    .child(senderRoom)
-                    .child("messages")
+                    .child("public")
                     .child(message.getMessageId()).setValue(message);
 
-            FirebaseDatabase.getInstance().getReference()
-                    .child("chats")
-                    .child(receiverRoom)
-                    .child("messages")
-                    .child(message.getMessageId()).setValue(message);
+
 
             return true; // true is closing popup, false is requesting a new selection
         });
 
-
+//  Image or message load on User Screen
         if(holder.getClass() == SentViewHolder.class) {
             SentViewHolder viewHolder = (SentViewHolder)holder;
-            //Start ---> For Sending Images, Video To the another person(Opponent) and Loading Image Url
+
             if(message.getMessage().equals("Photo")) {
                 viewHolder.binding.image.setVisibility(View.VISIBLE);
                 viewHolder.binding.message.setVisibility(View.GONE);
                 Glide.with(context).load(message.getImageUrl()).placeholder(R.drawable.placeholder).into(viewHolder.binding.image);
             }
-            //End
+//  End
+
+//          In Public Chat Activity(All User are able to send Message Right?),
+//          So, If any user is sending message, then definitely you want to show the message as well as  user name/number(For better Understanding purpose)
+
+//     ---> Here we are taking senderUid, After that as you know every user have a Unique userID, So From user node if that UniqueId exists then we will fetch userName data from there..
+//     ---> This is for Sender
+            FirebaseDatabase.getInstance()
+                    .getReference().child("users")
+                    .child(message.getSenderId())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()) {
+                                User user = snapshot.getValue(User.class);
+                                viewHolder.binding.name.setText("@" + user.getName());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+//          End
 
             viewHolder.binding.message.setText(message.getMessage());
 
@@ -124,7 +144,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             } else {
                 viewHolder.binding.feeling.setVisibility(View.GONE);
             }
-            //Set Instagram like feelings on Message
+
             viewHolder.binding.message.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -132,9 +152,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                     return false;
                 }
             });
-            //End
 
-            //Set Instagram like feelings on Image
             viewHolder.binding.image.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -142,7 +160,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                     return false;
                 }
             });
-            //End
 
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -160,16 +177,9 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                             message.setMessage("This message was deleted.");
                             message.setFeeling(-1);
                             FirebaseDatabase.getInstance().getReference()
-                                    .child("chats")
-                                    .child(senderRoom)
-                                    .child("messages")
+                                    .child("public")
                                     .child(message.getMessageId()).setValue(message);
 
-                            FirebaseDatabase.getInstance().getReference()
-                                    .child("chats")
-                                    .child(receiverRoom)
-                                    .child("messages")
-                                    .child(message.getMessageId()).setValue(message);
                             dialog.dismiss();
                         }
                     });
@@ -178,9 +188,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                         @Override
                         public void onClick(View v) {
                             FirebaseDatabase.getInstance().getReference()
-                                    .child("chats")
-                                    .child(senderRoom)
-                                    .child("messages")
+                                    .child("public")
                                     .child(message.getMessageId()).setValue(null);
                             dialog.dismiss();
                         }
@@ -200,13 +208,37 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             });
         } else {
             ReceiverViewHolder viewHolder = (ReceiverViewHolder)holder;
-            //Start ---> For Sending Images, Video To the another person(Opponent) and Loading Image Url
+            //  Image or message load on User Screen
             if(message.getMessage().equals("Photo")) {
                 viewHolder.binding.image.setVisibility(View.VISIBLE);
                 viewHolder.binding.message.setVisibility(View.GONE);
                 Glide.with(context).load(message.getImageUrl()).placeholder(R.drawable.placeholder).into(viewHolder.binding.image);
             }
             //End
+
+//          In Public Chat Activity(All User are able to send Message Right?),
+//          So, If any user is sending message, then definitely you want to show the message as well as  user name/number(For better Understanding purpose)
+
+//      ---> Here we are taking senderUid, After that as you know every user have a Unique userID, So From user node if that UniqueId exists then we will fetch userName data from there..
+//      ---> This is for Receiver
+            FirebaseDatabase.getInstance()
+                    .getReference().child("users")
+                    .child(message.getSenderId())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()) {
+                                User user = snapshot.getValue(User.class);
+                                viewHolder.binding.name.setText("@" + user.getName());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+//          End
             viewHolder.binding.message.setText(message.getMessage());
 
             if(message.getFeeling() >= 0) {
@@ -215,7 +247,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             } else {
                 viewHolder.binding.feeling.setVisibility(View.GONE);
             }
-            //Set Instagram like feelings on Message
+
             viewHolder.binding.message.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -223,9 +255,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                     return false;
                 }
             });
-            //End
 
-            //Set Instagram like feelings on Image
             viewHolder.binding.image.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -233,7 +263,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                     return false;
                 }
             });
-            //End
 
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -251,16 +280,9 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                             message.setMessage("This message was deleted.");
                             message.setFeeling(-1);
                             FirebaseDatabase.getInstance().getReference()
-                                    .child("chats")
-                                    .child(senderRoom)
-                                    .child("messages")
+                                    .child("public")
                                     .child(message.getMessageId()).setValue(message);
 
-                            FirebaseDatabase.getInstance().getReference()
-                                    .child("chats")
-                                    .child(receiverRoom)
-                                    .child("messages")
-                                    .child(message.getMessageId()).setValue(message);
                             dialog.dismiss();
                         }
                     });
@@ -269,9 +291,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                         @Override
                         public void onClick(View v) {
                             FirebaseDatabase.getInstance().getReference()
-                                    .child("chats")
-                                    .child(senderRoom)
-                                    .child("messages")
+                                    .child("public")
                                     .child(message.getMessageId()).setValue(null);
                             dialog.dismiss();
                         }
@@ -299,20 +319,20 @@ public class MessagesAdapter extends RecyclerView.Adapter {
 
     public class SentViewHolder extends RecyclerView.ViewHolder {
 
-        ItemSentBinding binding;
+        ItemSentGroupBinding binding;
         public SentViewHolder(@NonNull View itemView) {
             super(itemView);
-            binding = ItemSentBinding.bind(itemView);
+            binding = ItemSentGroupBinding.bind(itemView);
         }
     }
 
     public class ReceiverViewHolder extends RecyclerView.ViewHolder {
 
-        ItemReceiveBinding binding;
+        ItemReceiveGroupBinding binding;
 
         public ReceiverViewHolder(@NonNull View itemView) {
             super(itemView);
-            binding = ItemReceiveBinding.bind(itemView);
+            binding = ItemReceiveGroupBinding.bind(itemView);
         }
     }
 

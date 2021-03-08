@@ -1,7 +1,7 @@
 package com.mianasad.chatsapp.Models;
 
 public class Message {
-    private String messageId, message, senderId;
+    private String messageId, message, senderId, ImageUrl;
     private long timestamp;
     private int feeling = -1;
 
@@ -52,5 +52,13 @@ public class Message {
 
     public void setFeeling(int feeling) {
         this.feeling = feeling;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
     }
 }

@@ -1,4 +1,4 @@
-package com.mianasad.chatsapp.Activities;
+package com.mianasad.chatsapp.Models;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,11 +9,11 @@ public class ProcessingOtpDialogue {
     Activity activity;
     AlertDialog dialog;
 
-    ProcessingOtpDialogue(Activity myActivity){
+    public ProcessingOtpDialogue(Activity myActivity){
         activity = myActivity;
     }
 
-    void startProcessingDialog(){
+    public void startProcessingDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -25,7 +25,7 @@ public class ProcessingOtpDialogue {
         dialog.show();
     }
 
-    void dismissDialog(){
+    public void dismissDialog(){
         dialog.dismiss();
     }
 }
