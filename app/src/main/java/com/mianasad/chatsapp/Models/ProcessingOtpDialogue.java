@@ -24,7 +24,6 @@ public class ProcessingOtpDialogue {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
     }
-
     public void dismissDialog(){
         dialog.dismiss();
     }
